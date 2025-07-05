@@ -1,0 +1,90 @@
+local player = game.Players.LocalPlayer  
+local stats = player:WaitForChild("leaderstats")  
+local coins = stats:WaitForChild("Coins")
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "CoinSetterGUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 190)
+frame.Position = UDim2.new(0.5, -150, 0.5, -95)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "ğŸ’° Coin AyarlayÄ±cÄ±"
+title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+title.TextColor3 = Color3.new(1, 1, 1)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.Parent = frame
+
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(1, -20, 0, 40)
+textBox.Position = UDim2.new(0, 10, 0, 40)
+textBox.PlaceholderText = "Coin miktarÄ±nÄ± gir"
+textBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+textBox.TextColor3 = Color3.new(1, 1, 1)
+textBox.Font = Enum.Font.Gotham
+textBox.TextSize = 14
+textBox.ClearTextOnFocus = false
+textBox.Parent = frame
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, -20, 0, 40)
+button.Position = UDim2.new(0, 10, 0, 90)
+button.Text = "âœ… Onayla"
+button.BackgroundColor3 = Color3.fromRGB(0, 180, 100)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.GothamBold
+button.TextSize = 16
+button.Parent = frame
+
+local loopButton = Instance.new("TextButton")
+loopButton.Size = UDim2.new(1, -20, 0, 40)
+loopButton.Position = UDim2.new(0, 10, 0, 140)
+loopButton.Text = "â™»ï¸ Loop BaÅŸlat"
+loopButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
+loopButton.TextColor3 = Color3.new(1, 1, 1)
+loopButton.Font = Enum.Font.GothamBold
+loopButton.TextSize = 16
+loopButton.Parent = frame
+
+-- Coin deÄŸeri ayarlama
+button.MouseButton1Click:Connect(function()
+	local girilen = tonumber(textBox.Text)
+	if girilen then
+		coins.Value = girilen
+	else
+		button.Text = "âŒ SayÄ± gir!"
+		wait(2)
+		button.Text = "âœ… Onayla"
+	end
+end)
+
+-- LOOP sistemi
+local loopAktif = false
+local loopThread = nil
+
+loopButton.MouseButton1Click:Connect(function()
+	loopAktif = not loopAktif
+
+	if loopAktif then
+		loopButton.Text = "â¸ï¸ Loop Durdur"
+		local miktar = tonumber(textBox.Text) or 0
+
+		loopThread = task.spawn(function()
+			while loopAktif do
+				coins.Value += miktar
+				task.wait(1)
+			end
+		end)
+	else
+		loopButton.Text = "â™»ï¸ Loop BaÅŸlat"
+	end
+end)
